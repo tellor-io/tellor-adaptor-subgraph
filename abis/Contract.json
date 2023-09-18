@@ -1,0 +1,738 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "ownershipContract_",
+        "type": "address"
+      },
+      {
+        "internalType": "address payable",
+        "name": "tellorAddress_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "excessDIVARewardRecipient_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxDIVARewardUSD_",
+        "type": "uint256"
+      },
+      { "internalType": "address", "name": "diva_", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  { "inputs": [], "name": "AlreadyConfirmedPool", "type": "error" },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_timestampBlock",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_startTimeExcessDIVARewardRecipient",
+        "type": "uint256"
+      }
+    ],
+    "name": "ExcessDIVARewardRecipientAlreadyActive",
+    "type": "error"
+  },
+  { "inputs": [], "name": "FeeTokensNotSupported", "type": "error" },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_timestampBlock",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_startTimeMaxDIVARewardUSD",
+        "type": "uint256"
+      }
+    ],
+    "name": "MaxDIVARewardUSDAlreadyActive",
+    "type": "error"
+  },
+  { "inputs": [], "name": "MinPeriodUndisputedNotPassed", "type": "error" },
+  {
+    "inputs": [],
+    "name": "NoOracleSubmissionAfterExpiryTime",
+    "type": "error"
+  },
+  { "inputs": [], "name": "NotConfirmedPool", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_user", "type": "address" },
+      { "internalType": "address", "name": "_contractOwner", "type": "address" }
+    ],
+    "name": "NotContractOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_timestampBlock",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_startTimeExcessDIVARewardRecipient",
+        "type": "uint256"
+      }
+    ],
+    "name": "PendingExcessDIVARewardRecipientUpdate",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_timestampBlock",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_startTimeMaxDIVARewardUSD",
+        "type": "uint256"
+      }
+    ],
+    "name": "PendingMaxDIVARewardUSDUpdate",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ZeroDIVAAddress", "type": "error" },
+  { "inputs": [], "name": "ZeroExcessDIVARewardRecipient", "type": "error" },
+  { "inputs": [], "name": "ZeroOwnershipContractAddress", "type": "error" },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "excessDIVARewardRecipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "startTimeExcessDIVARewardRecipient",
+        "type": "uint256"
+      }
+    ],
+    "name": "ExcessDIVARewardRecipientUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "poolId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "finalValue",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "expiryTime",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "FinalReferenceValueSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "maxDIVARewardUSD",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "startTimeMaxDIVARewardUSD",
+        "type": "uint256"
+      }
+    ],
+    "name": "MaxDIVARewardUSDUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "revokedBy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "revokedExcessDIVARewardRecipient",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "restoredExcessDIVARewardRecipient",
+        "type": "address"
+      }
+    ],
+    "name": "PendingExcessDIVARewardRecipientUpdateRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "revokedBy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "revokedMaxDIVARewardUSD",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "restoredMaxDIVARewardUSD",
+        "type": "uint256"
+      }
+    ],
+    "name": "PendingMaxDIVARewardUSDUpdateRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "poolId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "tippingToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "tipper",
+        "type": "address"
+      }
+    ],
+    "name": "TipAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "poolId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "tippingToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "TipClaimed",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_poolId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
+      { "internalType": "address", "name": "_tippingToken", "type": "address" }
+    ],
+    "name": "addTip",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "bytes32", "name": "poolId", "type": "bytes32" },
+          { "internalType": "uint256", "name": "amount", "type": "uint256" },
+          {
+            "internalType": "address",
+            "name": "tippingToken",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IDIVAOracleTellor.ArgsBatchAddTip[]",
+        "name": "_argsBatchAddTip",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "batchAddTip",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "bytes32", "name": "poolId", "type": "bytes32" },
+          {
+            "internalType": "address[]",
+            "name": "tippingTokens",
+            "type": "address[]"
+          },
+          { "internalType": "bool", "name": "claimDIVAReward", "type": "bool" }
+        ],
+        "internalType": "struct IDIVAOracleTellor.ArgsBatchClaimReward[]",
+        "name": "_argsBatchClaimReward",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "batchClaimReward",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "bytes32", "name": "poolId", "type": "bytes32" },
+          {
+            "internalType": "address[]",
+            "name": "tippingTokens",
+            "type": "address[]"
+          },
+          { "internalType": "bool", "name": "claimDIVAReward", "type": "bool" }
+        ],
+        "internalType": "struct IDIVAOracleTellor.ArgsBatchSetFinalReferenceValue[]",
+        "name": "_argsBatchSetFinalReferenceValue",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "batchSetFinalReferenceValue",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_poolId", "type": "bytes32" },
+      {
+        "internalType": "address[]",
+        "name": "_tippingTokens",
+        "type": "address[]"
+      },
+      { "internalType": "bool", "name": "_claimDIVAReward", "type": "bool" }
+    ],
+    "name": "claimReward",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getActivationDelay",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getChallengeable",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getDIVAAddress",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_queryId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_timestamp", "type": "uint256" }
+    ],
+    "name": "getDataAfter",
+    "outputs": [
+      { "internalType": "bytes", "name": "_value", "type": "bytes" },
+      {
+        "internalType": "uint256",
+        "name": "_timestampRetrieved",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getExcessDIVARewardRecipientInfo",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "previousExcessDIVARewardRecipient",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "excessDIVARewardRecipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startTimeExcessDIVARewardRecipient",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_queryId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_timestamp", "type": "uint256" }
+    ],
+    "name": "getIndexForDataAfter",
+    "outputs": [
+      { "internalType": "bool", "name": "_found", "type": "bool" },
+      { "internalType": "uint256", "name": "_index", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMaxDIVARewardUSDInfo",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "previousMaxDIVARewardUSD",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxDIVARewardUSD",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startTimeMaxDIVARewardUSD",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMinPeriodUndisputed",
+    "outputs": [{ "internalType": "uint32", "name": "", "type": "uint32" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_queryId", "type": "bytes32" }
+    ],
+    "name": "getNewValueCountbyQueryId",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwnershipContract",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "reporter", "type": "address" },
+          {
+            "internalType": "uint256",
+            "name": "startIndex",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "endIndex", "type": "uint256" }
+        ],
+        "internalType": "struct IDIVAOracleTellor.ArgsGetPoolIdsForReporters[]",
+        "name": "_argsGetPoolIdsForReporters",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "getPoolIdsForReporters",
+    "outputs": [
+      { "internalType": "bytes32[][]", "name": "", "type": "bytes32[][]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address[]", "name": "_reporters", "type": "address[]" }
+    ],
+    "name": "getPoolIdsLengthForReporters",
+    "outputs": [
+      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_poolId", "type": "bytes32" }
+    ],
+    "name": "getQueryDataAndId",
+    "outputs": [
+      { "internalType": "bytes", "name": "queryData", "type": "bytes" },
+      { "internalType": "bytes32", "name": "queryId", "type": "bytes32" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_queryId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_timestamp", "type": "uint256" }
+    ],
+    "name": "getReporterByTimestamp",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32[]", "name": "_poolIds", "type": "bytes32[]" }
+    ],
+    "name": "getReporters",
+    "outputs": [
+      { "internalType": "address[]", "name": "", "type": "address[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_queryId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_index", "type": "uint256" }
+    ],
+    "name": "getTimestampbyQueryIdandIndex",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "bytes32", "name": "poolId", "type": "bytes32" },
+          {
+            "internalType": "address[]",
+            "name": "tippingTokens",
+            "type": "address[]"
+          }
+        ],
+        "internalType": "struct IDIVAOracleTellor.ArgsGetTipAmounts[]",
+        "name": "_argsGetTipAmounts",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "getTipAmounts",
+    "outputs": [
+      { "internalType": "uint256[][]", "name": "", "type": "uint256[][]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "bytes32", "name": "poolId", "type": "bytes32" },
+          {
+            "internalType": "uint256",
+            "name": "startIndex",
+            "type": "uint256"
+          },
+          { "internalType": "uint256", "name": "endIndex", "type": "uint256" }
+        ],
+        "internalType": "struct IDIVAOracleTellor.ArgsGetTippingTokens[]",
+        "name": "_argsGetTippingTokens",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "getTippingTokens",
+    "outputs": [
+      { "internalType": "address[][]", "name": "", "type": "address[][]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32[]", "name": "_poolIds", "type": "bytes32[]" }
+    ],
+    "name": "getTippingTokensLengthForPoolIds",
+    "outputs": [
+      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_queryId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_timestamp", "type": "uint256" }
+    ],
+    "name": "isInDispute",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_queryId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "_timestamp", "type": "uint256" }
+    ],
+    "name": "retrieveData",
+    "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "revokePendingExcessDIVARewardRecipientUpdate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "revokePendingMaxDIVARewardUSDUpdate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_poolId", "type": "bytes32" },
+      {
+        "internalType": "address[]",
+        "name": "_tippingTokens",
+        "type": "address[]"
+      },
+      { "internalType": "bool", "name": "_claimDIVAReward", "type": "bool" }
+    ],
+    "name": "setFinalReferenceValue",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tellor",
+    "outputs": [
+      { "internalType": "contract ITellor", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_newExcessDIVARewardRecipient",
+        "type": "address"
+      }
+    ],
+    "name": "updateExcessDIVARewardRecipient",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_newMaxDIVARewardUSD",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateMaxDIVARewardUSD",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

@@ -1,0 +1,72 @@
+type ExcessDIVARewardRecipientUpdated @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  excessDIVARewardRecipient: Bytes! # address
+  startTimeExcessDIVARewardRecipient: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FinalReferenceValueSet @entity(immutable: true) {
+  id: Bytes!
+  poolId: Bytes! # bytes32
+  finalValue: BigInt! # uint256
+  expiryTime: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MaxDIVARewardUSDUpdated @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  maxDIVARewardUSD: BigInt! # uint256
+  startTimeMaxDIVARewardUSD: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PendingExcessDIVARewardRecipientUpdateRevoked @entity(immutable: true) {
+  id: Bytes!
+  revokedBy: Bytes! # address
+  revokedExcessDIVARewardRecipient: Bytes! # address
+  restoredExcessDIVARewardRecipient: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PendingMaxDIVARewardUSDUpdateRevoked @entity(immutable: true) {
+  id: Bytes!
+  revokedBy: Bytes! # address
+  revokedMaxDIVARewardUSD: BigInt! # uint256
+  restoredMaxDIVARewardUSD: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TipAdded @entity(immutable: true) {
+  id: Bytes!
+  poolId: Bytes! # bytes32
+  tippingToken: Bytes! # address
+  amount: BigInt! # uint256
+  tipper: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TipClaimed @entity(immutable: true) {
+  id: Bytes!
+  poolId: Bytes! # bytes32
+  recipient: Bytes! # address
+  tippingToken: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
